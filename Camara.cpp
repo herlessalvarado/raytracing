@@ -3,6 +3,7 @@
 #include <iostream>
 
 using namespace std;
+
 void Camara::configurar(float _near, float fov, int ancho, int alto,
                         vec3 pos_eye, vec3 center, vec3 up) {
   f = _near;
@@ -17,7 +18,8 @@ void Camara::configurar(float _near, float fov, int ancho, int alto,
   xe.normalize();
   ye = ze.cruz(xe);
 }
-void Camara::renderizar() {
+
+void Camara::renderizar(Luz& luz) {
   Rayo rayo;
   rayo.ori = eye;
   vec3 dir;
@@ -29,13 +31,15 @@ void Camara::renderizar() {
   Esfera esf(vec3(2, 0, 0), 8, vec3(0, 0, 1));
   vec3 color;
   float t;
+  vec3 Pi, N;
   for (int x = 0; x < w; x++) {
     for (int y = 0; y < h; y++) {
       dir = ze * (-f) + ye * a * (y / h - 0.5) + xe * b * (x / w - 0.5);
       dir.normalize();
       rayo.dir = dir;
       color.set(0, 0, 0);
-      if (esf.intersectar(rayo, t)) {
+      // todos los objetos con el t mas cercano
+      if (esf.intersectar(rayo, t, Pi, N)) {
         color = esf.color;
       }
       (*pImg)(x, h - 1 - y, 0) = (BYTE)(color.x * 255);

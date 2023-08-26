@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "CImg.h"
+#include "Luz.h"
 #include "Objeto.h"
 #include "Rayo.h"
 #include "vec3.h"
@@ -15,13 +16,13 @@ typedef unsigned char BYTE;
 class Camara {
   vec3 eye, xe, ye, ze;
   float f, a, b, w, h;
-  CImg<BYTE> *pImg;
+  CImg<BYTE>* pImg;
 
  public:
   Camara() {}
   void configurar(float _near, float fov, int ancho, int alto, vec3 pos_eye,
                   vec3 center, vec3 up);
-  void renderizar();
+  void renderizar(Luz& luz);
 };
 
 #endif  // CAMARA_H
