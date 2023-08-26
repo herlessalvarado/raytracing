@@ -34,7 +34,7 @@ class Esfera : public Objeto {
     if (t <= 0) {
       return false;
     }
-    Pi = o + t * d;     // punto de interseccion
+    Pi = o + (d * t);   // punto de interseccion
     N = (Pi - centro);  // normal
     N.normalize();
     return true;
