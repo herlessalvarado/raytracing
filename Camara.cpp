@@ -40,7 +40,9 @@ void Camara::renderizar(Luz& luz) {
       color.set(0, 0, 0);
       // todos los objetos con el t mas cercano
       if (esf.intersectar(rayo, t, Pi, N)) {
-        color = esf.color;
+        // color = esf.color;
+        vec3 ambiente = luz.color * 0.2;
+        color = esf.color * ambiente;
       }
       (*pImg)(x, h - 1 - y, 0) = (BYTE)(color.x * 255);
       (*pImg)(x, h - 1 - y, 1) = (BYTE)(color.y * 255);
