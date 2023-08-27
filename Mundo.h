@@ -2,16 +2,16 @@
 #define MUNDO_H
 
 #include "Camara.h"
-#include "Luz.h"
+#include "Light.h"
 #include "Objeto.h"
 
 class Mundo {
  public:
   Camara camara;
-  Luz luz;
+  Light light;
   std::vector<Objeto> objetos;
 
-  Mundo(const Camara& camara, const Luz& luz) : camara(camara), luz(luz){};
+  Mundo(const Camara& camara, const Light& light) : camara(camara), light(light){};
 
   void añadirObjeto(const Objeto& objeto) { objetos.push_back(objeto); }
 };

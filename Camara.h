@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "CImg.h"
-#include "Luz.h"
+#include "Light.h"
 #include "Objeto.h"
 #include "Ray.h"
 #include "vec3.h"
@@ -22,7 +22,7 @@ class Camara {
   Camara() {}
   void configurar(float _near, float fov, int ancho, int alto, vec3 pos_eye,
                   vec3 center, vec3 up);
-  void renderizar(Luz& luz);
+  void renderizar(Light& light);
 };
 
 #endif  // CAMARA_H
