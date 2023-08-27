@@ -1,7 +1,9 @@
 {
-    "editor.formatOnSave": true,
-    "C_Cpp.clang_format_fallbackStyle": "Google",
-    "files.associations": {
-        "algorithm": "cpp"
-    }
+  "editor.formatOnSave": true,
+  "C_Cpp.clang_format_fallbackStyle": "Google",
+  "files.associations": {
+    "algorithm": "cpp",
+    "vector": "cpp",
+    "__node_handle": "cpp"
+  }
 }

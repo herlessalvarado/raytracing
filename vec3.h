@@ -33,6 +33,9 @@ class vec3 {
   vec3 operator-() { return vec3(-x, -y, -z); }
   vec3 operator*(float f) { return vec3(f * x, f * y, f * z); }
   vec3 operator/(float f) { return vec3(x / f, y / f, z / f); }
+  friend vec3 operator*(float scalar, const vec3& vector) {
+    return vec3(scalar * vector.x, scalar * vector.y, scalar * vector.z);
+  }
 
   void operator*=(vec3 v) {
     x *= v.x;
@@ -56,6 +59,6 @@ class vec3 {
   }
 };
 float clamp(float menor, float mayor, float valor);
-vec3 operator*(float f, vec3 v);
+// vec3 operator*(float f, vec3 v) { return vec3(v.x * f, v.y * f, v.z * f); };
 
 #endif  // VEC3_H
