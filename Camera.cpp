@@ -1,14 +1,14 @@
-#include "Camara.h"
+#include "Camera.h"
 
 #include <iostream>
 
 using namespace std;
 
-void Camara::configurar(float _near, float fov, int ancho, int alto,
-                        vec3 pos_eye, vec3 center, vec3 up) {
+void Camera::configure(float _near, float fov, int width, int height,
+                       vec3 pos_eye, vec3 center, vec3 up) {
   f = _near;
-  w = ancho;
-  h = alto;
+  w = width;
+  h = height;
   a = 2 * f * tan(fov * M_PI / 360);
   b = w / h * a;
   eye = pos_eye;
@@ -19,7 +19,7 @@ void Camara::configurar(float _near, float fov, int ancho, int alto,
   ye = ze.cruz(xe);
 }
 
-void Camara::renderizar(Light& light) {
+void Camera::render(Light& light) {
   Ray ray;
   ray.ori = eye;
   vec3 dir;

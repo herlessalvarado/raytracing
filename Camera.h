@@ -1,5 +1,5 @@
-#ifndef CAMARA_H
-#define CAMARA_H
+#ifndef CAMERA_H
+#define CAMERA_H
 
 #include <vector>
 
@@ -13,16 +13,18 @@ using namespace std;
 using namespace cimg_library;
 typedef unsigned char BYTE;
 
-class Camara {
+class Camera {
   vec3 eye, xe, ye, ze;
   float f, a, b, w, h;
   CImg<BYTE>* pImg;
 
  public:
-  Camara() {}
-  void configurar(float _near, float fov, int ancho, int alto, vec3 pos_eye,
-                  vec3 center, vec3 up);
-  void renderizar(Light& light);
+  Camera() {}
+
+  void configure(float _near, float fov, int width, int height, vec3 pos_eye,
+                 vec3 center, vec3 up);
+
+  void render(Light& light);
 };
 
-#endif  // CAMARA_H
+#endif  // CAMERA_H
