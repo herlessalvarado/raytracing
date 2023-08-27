@@ -41,8 +41,15 @@ void Camara::renderizar(Luz& luz) {
       // todos los objetos con el t mas cercano
       if (esf.intersectar(rayo, t, Pi, N)) {
         // color = esf.color;
-        vec3 ambiente = luz.color * 0.2;
-        color = esf.color * ambiente;
+        vec3 ambiente = luz.color * 0.1;
+        vec3 L = luz.pos - Pi;
+        L.normalize();
+        float difuso = L.punto(N);
+        vec3 difusa = luz.color * 0.8 * max(0.0f, difuso);
+        vec3 R = 2.0f * difuso * N - L;
+        vec3 V = -dir;
+        vec3 especular = luz.color * (0.9 * (pow(max(0.0f, R.punto(V)), 32)));
+        color = esf.color * (difusa + ambiente + especular);
       }
       (*pImg)(x, h - 1 - y, 0) = (BYTE)(color.x * 255);
       (*pImg)(x, h - 1 - y, 1) = (BYTE)(color.y * 255);
