@@ -6,15 +6,15 @@
 #include "Object.h"
 
 class World {
- public:
-  Camera camera;
-  Light light;
-  std::vector<Object> objects;
+   public:
+    Camera camera;
+    Light light;
+    std::vector<Object> objects;
 
-  World(const Camera& camera, const Light& light)
-      : camera(camera), light(light){};
+    World(const Camera& camera, const Light& light)
+        : camera(camera), light(light){};
 
-  void addObject(const Object& object) { objects.push_back(object); }
+    void addObject(const Object& object) { objects.push_back(object); }
 };
 
 #endif  // WORLD_H
