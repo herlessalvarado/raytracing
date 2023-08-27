@@ -1,20 +1,20 @@
-#ifndef MUNDO_H
-#define MUNDO_H
+#ifndef WORLD_H
+#define WORLD_H
 
 #include "Camera.h"
 #include "Light.h"
 #include "Object.h"
 
-class Mundo {
+class World {
  public:
   Camera camera;
   Light light;
   std::vector<Object> objects;
 
-  Mundo(const Camera& camera, const Light& light)
+  World(const Camera& camera, const Light& light)
       : camera(camera), light(light){};
 
   void addObject(const Object& object) { objects.push_back(object); }
 };
 
-#endif  // MUNDO_H
+#endif  // WORLD_H
