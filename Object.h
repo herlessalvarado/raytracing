@@ -7,6 +7,7 @@
 class Object {
  public:
   vec3 color;
+
   Object(vec3 col) : color{col} {}
 };
 

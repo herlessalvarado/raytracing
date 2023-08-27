@@ -6,6 +6,7 @@
 class Light {
  public:
   vec3 pos, color;
+
   Light(vec3 pos, vec3 color) : pos(pos), color(color) {}
 };
 
