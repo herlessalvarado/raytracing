@@ -40,15 +40,15 @@ void Camera::render(Light& light) {
             color.set(0, 0, 0);
             // todos los objects con el t mas cercano
             if (sphere.intersect(ray, t, Pi, N)) {
-                vec3 ambiente = light.color * 0.1;
+                vec3 ambient = light.color * sphere.ka;
                 vec3 L = light.pos - Pi;
                 L.normalize();
-                float difuso = L.dot(N);
-                vec3 difusa = light.color * 0.8 * max(0.0f, difuso);
-                vec3 R = 2.0f * difuso * N - L;
+                float diff = L.dot(N);
+                vec3 diffuse = light.color * sphere.kd * max(0.0f, diff);
+                vec3 R = 2.0f * diff * N - L;
                 vec3 V = -dir;
-                vec3 especular = light.color * (0.9 * (pow(max(0.0f, R.dot(V)), 32)));
-                color = sphere.color * (difusa + ambiente + especular);
+                vec3 especular = light.color * (sphere.ks * (pow(max(0.0f, R.dot(V)), sphere.shininess)));
+                color = sphere.color * (diffuse + ambient + especular);
                 color.max_to_one();
             }
             (*pImg)(x, h - 1 - y, 0) = (BYTE)(color.x * 255);
