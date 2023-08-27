@@ -6,7 +6,7 @@
 #include "CImg.h"
 #include "Luz.h"
 #include "Objeto.h"
-#include "Rayo.h"
+#include "Ray.h"
 #include "vec3.h"
 
 using namespace std;

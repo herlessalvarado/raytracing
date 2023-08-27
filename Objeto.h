@@ -1,7 +1,7 @@
 #ifndef OBJETO_H
 #define OBJETO_H
 
-#include "Rayo.h"
+#include "Ray.h"
 #include "vec3.h"
 
 class Objeto {
@@ -9,7 +9,7 @@ class Objeto {
   vec3 color;
   Objeto(vec3 col) : color{col} {}
 
-  // virtual bool intersectar(Rayo ray, float &t) = 0;
+  // virtual bool intersectar(Ray ray, float &t) = 0;
 };
 
 class Esfera : public Objeto {
@@ -18,7 +18,7 @@ class Esfera : public Objeto {
   float radio;
 
   Esfera(vec3 cen, float r, vec3 col) : centro{cen}, radio{r}, Objeto(col){};
-  bool intersectar(Rayo ray, float &t, vec3 &Pi, vec3 &N) {
+  bool intersectar(Ray ray, float &t, vec3 &Pi, vec3 &N) {
     vec3 d = ray.dir;
     vec3 o = ray.ori;
     float a = d.punto(d);

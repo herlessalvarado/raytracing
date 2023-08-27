@@ -20,8 +20,8 @@ void Camara::configurar(float _near, float fov, int ancho, int alto,
 }
 
 void Camara::renderizar(Luz& luz) {
-  Rayo rayo;
-  rayo.ori = eye;
+  Ray ray;
+  ray.ori = eye;
   vec3 dir;
 
   pImg = new CImg<BYTE>(w, h, 1, 3);
@@ -36,10 +36,10 @@ void Camara::renderizar(Luz& luz) {
     for (int y = 0; y < h; y++) {
       dir = ze * (-f) + ye * a * (y / h - 0.5) + xe * b * (x / w - 0.5);
       dir.normalize();
-      rayo.dir = dir;
+      ray.dir = dir;
       color.set(0, 0, 0);
       // todos los objetos con el t mas cercano
-      if (esf.intersectar(rayo, t, Pi, N)) {
+      if (esf.intersectar(ray, t, Pi, N)) {
         // color = esf.color;
         vec3 ambiente = luz.color * 0.1;
         vec3 L = luz.pos - Pi;
