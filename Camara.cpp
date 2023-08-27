@@ -28,7 +28,7 @@ void Camara::renderizar(Light& light) {
   CImgDisplay dis_img(
       (*pImg), "Imagen RayTracing en Perspectiva desde una Camara Pinhole");
 
-  Esfera esf(vec3(2, 0, 0), 8, vec3(0, 0, 1));
+  Sphere sphere(vec3(2, 0, 0), 8, vec3(0, 0, 1));
   vec3 color;
   float t;
   vec3 Pi, N;
@@ -38,9 +38,9 @@ void Camara::renderizar(Light& light) {
       dir.normalize();
       ray.dir = dir;
       color.set(0, 0, 0);
-      // todos los objetos con el t mas cercano
-      if (esf.intersectar(ray, t, Pi, N)) {
-        // color = esf.color;
+      // todos los objects con el t mas cercano
+      if (sphere.intersect(ray, t, Pi, N)) {
+        // color = sphere.color;
         vec3 ambiente = light.color * 0.1;
         vec3 L = light.pos - Pi;
         L.normalize();
@@ -49,7 +49,7 @@ void Camara::renderizar(Light& light) {
         vec3 R = 2.0f * difuso * N - L;
         vec3 V = -dir;
         vec3 especular = light.color * (0.9 * (pow(max(0.0f, R.punto(V)), 32)));
-        color = esf.color * (difusa + ambiente + especular);
+        color = sphere.color * (difusa + ambiente + especular);
       }
       (*pImg)(x, h - 1 - y, 0) = (BYTE)(color.x * 255);
       (*pImg)(x, h - 1 - y, 1) = (BYTE)(color.y * 255);

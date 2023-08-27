@@ -4,6 +4,9 @@
   "files.associations": {
     "algorithm": "cpp",
     "vector": "cpp",
-    "__node_handle": "cpp"
+    "__node_handle": "cpp",
+    "__split_buffer": "cpp",
+    "deque": "cpp",
+    "string": "cpp"
   }
 }

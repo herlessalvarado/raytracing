@@ -5,7 +5,7 @@
 
 #include "CImg.h"
 #include "Light.h"
-#include "Objeto.h"
+#include "Object.h"
 #include "Ray.h"
 #include "vec3.h"
 

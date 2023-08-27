@@ -3,7 +3,7 @@
 #include "Camara.h"
 #include "Light.h"
 #include "Mundo.h"
-#include "Objeto.h"
+#include "Object.h"
 #include "vec3.h"
 
 int main() {

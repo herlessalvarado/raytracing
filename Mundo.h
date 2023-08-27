@@ -3,17 +3,18 @@
 
 #include "Camara.h"
 #include "Light.h"
-#include "Objeto.h"
+#include "Object.h"
 
 class Mundo {
  public:
   Camara camara;
   Light light;
-  std::vector<Objeto> objetos;
+  std::vector<Object> objects;
 
-  Mundo(const Camara& camara, const Light& light) : camara(camara), light(light){};
+  Mundo(const Camara& camara, const Light& light)
+      : camara(camara), light(light){};
 
-  void añadirObjeto(const Objeto& objeto) { objetos.push_back(objeto); }
+  void addObject(const Object& object) { objects.push_back(object); }
 };
 
 #endif  // MUNDO_H
