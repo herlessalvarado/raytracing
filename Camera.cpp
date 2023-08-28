@@ -19,7 +19,7 @@ void Camera::configure(float _near, float fov, int width, int height,
     ye = ze.cross(xe);
 }
 
-void Camera::render(Light& light) {
+void Camera::render(Light& light, vector<Object*> objects) {
     Ray ray;
     ray.ori = eye;
     vec3 dir;
@@ -28,7 +28,6 @@ void Camera::render(Light& light) {
     CImgDisplay dis_img(
         (*pImg), "Imagen RayTracing en Perspectiva desde una Camara Pinhole");
 
-    Sphere sphere(vec3(2, 0, 0), 8, vec3(0, 0, 1));
     vec3 color;
     float t;
     vec3 Pi, N;
@@ -39,17 +38,19 @@ void Camera::render(Light& light) {
             ray.dir = dir;
             color.set(0, 0, 0);
             // todos los objects con el t mas cercano
-            if (sphere.intersect(ray, t, Pi, N)) {
-                vec3 ambient = light.color * sphere.ka;
-                vec3 L = light.pos - Pi;
-                L.normalize();
-                float diff = L.dot(N);
-                vec3 diffuse = light.color * sphere.kd * max(0.0f, diff);
-                vec3 R = 2.0f * diff * N - L;
-                vec3 V = -dir;
-                vec3 especular = light.color * (sphere.ks * (pow(max(0.0f, R.dot(V)), sphere.shininess)));
-                color = sphere.color * (diffuse + ambient + especular);
-                color.max_to_one();
+            for (auto object : objects) {
+                if (object->intersect(ray, t, Pi, N)) {
+                    vec3 ambient = light.color * object->ka;
+                    vec3 L = light.pos - Pi;
+                    L.normalize();
+                    float diff = L.dot(N);
+                    vec3 diffuse = light.color * object->kd * max(0.0f, diff);
+                    vec3 R = 2.0f * diff * N - L;
+                    vec3 V = -dir;
+                    vec3 especular = light.color * (object->ks * (pow(max(0.0f, R.dot(V)), object->shininess)));
+                    color = object->color * (diffuse + ambient + especular);
+                    color.max_to_one();
+                }
             }
             (*pImg)(x, h - 1 - y, 0) = (BYTE)(color.x * 255);
             (*pImg)(x, h - 1 - y, 1) = (BYTE)(color.y * 255);

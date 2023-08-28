@@ -7,20 +7,26 @@
 class Object {
    public:
     vec3 color;
+    float ka, kd, ks, shininess;
 
     Object(vec3 col) : color{col} {}
+
+    virtual bool intersect(Ray ray, float &t, vec3 &Pi, vec3 &N) = 0;
 };
 
 class Sphere : public Object {
    public:
     vec3 center;
     float radius;
-    float ka = 0.1, kd = 0.8, ks = 0.9;
-    float shininess = 32.0;
 
-    Sphere(vec3 cen, float r, vec3 col) : center{cen}, radius{r}, Object(col){};
+    Sphere(vec3 cen, float r, vec3 col) : center{cen}, radius{r}, Object(col) {
+        ka = 0.1;
+        kd = 0.8;
+        ks = 0.9;
+        shininess = 32.0;
+    };
 
-    bool intersect(Ray ray, float &t, vec3 &Pi, vec3 &N) {
+    bool intersect(Ray ray, float &t, vec3 &Pi, vec3 &N) override {
         vec3 d = ray.dir;
         vec3 o = ray.ori;
         float a = d.dot(d);
