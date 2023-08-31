@@ -42,6 +42,7 @@ void Camera::render(Light& light, vector<Object*> objects) {
                 if (object->intersect(ray, t, Pi, N)) {
                     vec3 ambient = light.color * object->ka;
                     vec3 L = light.pos - Pi;
+                    // double distance_to_light = L.modulus();
                     L.normalize();
                     float diff = L.dot(N);
                     vec3 diffuse = light.color * object->kd * max(0.0f, diff);

@@ -21,7 +21,7 @@ int main() {
     world.camera.configure(3, 60, 800, 600, vec3(0, 0, 100), vec3(0, 0, 0),
                            vec3(0, 1, 0));
     for (int i = 0; i < 50; i++) {
-        Sphere *sphere = new Sphere(vec3(randomFloat(-60, 60), randomFloat(-50, 50), 0), randomFloat(1, 5), vec3(0, 0, 1));
+        Sphere *sphere = new Sphere(vec3(randomFloat(-60, 60), randomFloat(-50, 50), 0), randomFloat(1, 10), vec3(randomFloat(0, 1), randomFloat(0, 1), randomFloat(0, 1)));
         world.addObject(sphere);
     }
     world.camera.render(world.light, world.objects);
