@@ -16,10 +16,12 @@ float randomFloat(float min, float max) {
 
 int main() {
     Camera camera;
-    Light light(vec3(400, 300, 0), vec3(1, 1, 1));
+    Light light(vec3(0, 600, 0), vec3(1, 1, 1));
     World world(camera, light);
     world.camera.configure(3, 60, 800, 600, vec3(0, 0, 100), vec3(0, 0, 0),
                            vec3(0, 1, 0));
+    Plane *plane = new Plane(vec3(0, -1, 0), vec3(0, 1, 0), vec3(1, 1, 0));
+    world.addObject(plane);
     for (int i = 0; i < 50; i++) {
         Sphere *sphere = new Sphere(vec3(randomFloat(-60, 60), randomFloat(-50, 50), 0), randomFloat(1, 10), vec3(randomFloat(0, 1), randomFloat(0, 1), randomFloat(0, 1)));
         world.addObject(sphere);
