@@ -68,20 +68,20 @@ void Camera::render(Light& light, vector<Object*> objects) {
                 color = closestObject->color * (diffuse + ambient + especular);
                 color.max_to_one();
             }
-            // if (minT != std::numeric_limits<float>::infinity()) {
-            //     Ray shadowRay;
-            //     shadowRay.ori = minPi + 0.005 * N;
-            //     shadowRay.dir = minL;
-            //     for (auto object : objects) {
-            //         if (object->intersect(shadowRay, t, Pi, N)) {
-            //             float distance_to_light = sqrt(pow(minPi.x - light.pos.x, 2.0) + pow(minPi.y - light.pos.y, 2.0) + pow(minPi.z - light.pos.z, 2.0));
-            //             float distance_to_current_object = sqrt(pow(minPi.x - Pi.x, 2.0) + pow(minPi.y - Pi.y, 2.0) + pow(minPi.z - Pi.z, 2.0));
-            //             if (distance_to_light > distance_to_current_object) {
-            //                 color = closestObject->color * (light.color * closestObject->ka);
-            //             }
-            //         }
-            //     }
-            // }
+            if (minT != std::numeric_limits<float>::infinity()) {
+                Ray shadowRay;
+                shadowRay.ori = minPi + 0.005 * N;
+                shadowRay.dir = minL;
+                for (auto object : objects) {
+                    if (object->intersect(shadowRay, t, Pi, N)) {
+                        float distance_to_light = sqrt(pow(minPi.x - light.pos.x, 2.0) + pow(minPi.y - light.pos.y, 2.0) + pow(minPi.z - light.pos.z, 2.0));
+                        float distance_to_current_object = sqrt(pow(minPi.x - Pi.x, 2.0) + pow(minPi.y - Pi.y, 2.0) + pow(minPi.z - Pi.z, 2.0));
+                        if (distance_to_light > distance_to_current_object) {
+                            color = closestObject->color * (light.color * closestObject->ka);
+                        }
+                    }
+                }
+            }
             (*pImg)(x, h - 1 - y, 0) = (BYTE)(color.x * 255);
             (*pImg)(x, h - 1 - y, 1) = (BYTE)(color.y * 255);
             (*pImg)(x, h - 1 - y, 2) = (BYTE)(color.z * 255);
