@@ -57,12 +57,12 @@ void Camera::render(Light& light, vector<Object*> objects) {
             }
             if (hasIntersected == true) {
                 vec3 ambient = light.color * closestObject->ka;
-                vec3 L = light.pos - Pi;
+                vec3 L = light.pos - minPi;
                 L.normalize();
                 minL = L;  // rs
-                float diff = L.dot(N);
+                float diff = L.dot(minN);
                 vec3 diffuse = light.color * closestObject->kd * max(0.0f, diff);
-                vec3 R = 2.0f * diff * N - L;
+                vec3 R = 2.0f * diff * minN - L;
                 vec3 V = -dir;
                 vec3 especular = light.color * (closestObject->ks * (pow(max(0.0f, R.dot(V)), closestObject->shininess)));
                 color = closestObject->color * (diffuse + ambient + especular);
