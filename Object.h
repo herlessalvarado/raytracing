@@ -11,7 +11,7 @@ class Plane;
 class Object {
    public:
     vec3 color;
-    float ka, kd, ks, shininess;
+    float ka, kd, ks, kr = 0, shininess;
     std::string type;
 
     Object(vec3 col, std::string type) : color{col}, type{type} {}

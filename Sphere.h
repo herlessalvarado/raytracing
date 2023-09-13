@@ -9,6 +9,7 @@ class Sphere : public Object {
     float radius;
 
     Sphere(vec3 cen, float r, vec3 col, std::string type) : center{cen}, radius{r}, Object(col, type) {
+        if (type == "glass") kr = 1;
         ka = 0.1;
         kd = 0.8;
         ks = 0.9;
