@@ -7,7 +7,7 @@ class Plane : public Object {
    public:
     vec3 point, normal;
 
-    Plane(vec3 point, vec3 normal, vec3 col) : point{point}, normal{normal}, Object(col) {
+    Plane(vec3 point, vec3 normal, vec3 col, std::string type) : point{point}, normal{normal}, Object(col, type) {
         ka = 0.1;
         kd = 0.8;
         ks = 0.9;
