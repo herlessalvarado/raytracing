@@ -57,7 +57,7 @@ vec3 Camera::lightning(Light& light, vector<Object*> objects, Ray ray, int depth
     vec3 minPi, minL, minN;
     bool hasIntersected = false;
     for (auto object : objects) {
-        if (object->intersect(ray, t, Pi, N)) {  // check later
+        if (object->intersect(ray, t, Pi, N)) {
             hasIntersected = true;
             if (t < minT && t > 0) {
                 minT = t;
@@ -69,37 +69,46 @@ vec3 Camera::lightning(Light& light, vector<Object*> objects, Ray ray, int depth
     }
     if (hasIntersected) {
         vec3 ambient = light.color * closestObject->ka;
+        vec3 diffuse = vec3(), specular = vec3();
         vec3 L = light.pos - minPi;
+        float L_distance = L.modulus();
         L.normalize();
-        minL = L;  // rs
-        float diff = L.dot(minN);
-        vec3 diffuse = light.color * closestObject->kd * max(0.0f, diff);
-        vec3 R = 2.0f * diff * minN - L;
+        minL = L;
+
+        // Shadow
+        Ray shadowRay;
+        shadowRay.ori = minPi + 0.005 * minN;
+        shadowRay.dir = minL;
+        bool inShadow = false;
+        for (auto object : objects) {
+            if (object->intersect(shadowRay, t, Pi, N)) {
+                if ((Pi - minPi).modulus() < L_distance) {
+                    inShadow = true;
+                    break;
+                }
+            }
+        }
+
         vec3 V = -ray.dir;
-        vec3 especular = light.color * (closestObject->ks * (pow(max(0.0f, R.dot(V)), closestObject->shininess)));
+
+        // No Shadow
+        if (!inShadow) {
+            float diff = L.dot(minN);
+            diffuse = light.color * closestObject->kd * max(0.0f, diff);
+            vec3 R = 2.0f * diff * minN - L;
+            specular = light.color * (closestObject->ks * (pow(max(0.0f, R.dot(V)), closestObject->shininess)));
+        }
+
+        // Reflection
         vec3 reflective = vec3();
-        if (closestObject->isReflective() && depth < 3) {
+        if (closestObject->isReflective() && depth < 7) {
             vec3 reflected = 2 * V.dot(minN) * minN - V;
             reflected.normalize();
-            Ray reflected_ray(minPi + 0.005 * N, reflected);
+            Ray reflected_ray(minPi + 0.005 * minN, reflected);
             reflective = lightning(light, objects, reflected_ray, depth + 1);
         }
-        color = closestObject->color * (ambient + diffuse + especular) + closestObject->kr * reflective;
+        color = closestObject->color * (ambient + diffuse + specular) + closestObject->kr * reflective;
         color.max_to_one();
     }
     return color;
-    // if (minT != std::numeric_limits<float>::infinity()) {
-    //     Ray shadowRay;
-    //     shadowRay.ori = minPi + 0.005 * N;
-    //     shadowRay.dir = minL;
-    //     for (auto object : objects) {
-    //         if (object->intersect(shadowRay, t, Pi, N)) {
-    //             float distance_to_light = sqrt(pow(minPi.x - light.pos.x, 2.0) + pow(minPi.y - light.pos.y, 2.0) + pow(minPi.z - light.pos.z, 2.0));
-    //             float distance_to_current_object = sqrt(pow(minPi.x - Pi.x, 2.0) + pow(minPi.y - Pi.y, 2.0) + pow(minPi.z - Pi.z, 2.0));
-    //             if (distance_to_light > distance_to_current_object) {
-    //                 color = closestObject->color * (light.color * closestObject->ka);
-    //             }
-    //         }
-    //     }
-    // }
 }
