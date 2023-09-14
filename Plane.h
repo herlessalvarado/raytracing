@@ -8,11 +8,11 @@ class Plane : public Object {
     vec3 point, normal;
 
     Plane(vec3 point, vec3 normal, vec3 col, std::string type) : point{point}, normal{normal}, Object(col, type) {
-        if (type == "glass") kr = 1;
+        if (type == "glass") kr = 0.4;
         ka = 0.1;
-        kd = 0.8;
-        ks = 0.9;
-        shininess = 32.0;
+        kd = 0.3;
+        ks = 0.1;
+        shininess = 8;
     };
 
     bool intersect(Ray ray, float &t, vec3 &Pi, vec3 &N) override {
