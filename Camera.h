@@ -25,6 +25,8 @@ class Camera {
                    vec3 center, vec3 up);
 
     void render(Light& light, vector<Object*> objects);
+
+    vec3 lightning(Light& light, vector<Object*> objects, Ray ray, int depth);
 };
 
 #endif  // CAMERA_H
