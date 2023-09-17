@@ -8,6 +8,7 @@
 
 class Sphere;
 class Plane;
+class Cylinder;
 class Object {
    public:
     vec3 color;
@@ -23,6 +24,7 @@ class Object {
     };
 };
 
+#include "Cylinder.h"
 #include "Plane.h"
 #include "Sphere.h"
 
