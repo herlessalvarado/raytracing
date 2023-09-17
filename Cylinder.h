@@ -11,10 +11,10 @@ class Cylinder : public Object {
 
     Cylinder(vec3 top, vec3 bottom, float r, vec3 col, std::string type) : top{top}, bottom{bottom}, radius{r}, Object(col, type) {
         if (type == "glass") kr = 1;
-        ka = 0.1;
-        kd = 0.8;
-        ks = 0.9;
-        shininess = 32.0;
+        ka = 0.05;
+        kd = 0.15;
+        ks = 0.95;
+        shininess = 150;
     };
 
     float sign(float x) {
