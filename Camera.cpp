@@ -58,8 +58,8 @@ vec3 Camera::lightning(Light& light, vector<Object*> objects, Ray ray, int depth
     bool hasIntersected = false;
     for (auto object : objects) {
         if (object->intersect(ray, t, Pi, N)) {
-            hasIntersected = true;
             if (t < minT && t > 0) {
+                hasIntersected = true;
                 minT = t;
                 minPi = Pi;
                 minN = N;
