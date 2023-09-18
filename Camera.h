@@ -29,6 +29,8 @@ class Camera {
     vec3 lightning(Light& light, vector<Object*> objects, Ray ray, int depth);
 
     vec3 refract(vec3& I, vec3& N, float& ior);
+
+    void fresnel(vec3& I, vec3& N, float& ior, float& kr);
 };
 
 #endif  // CAMERA_H
