@@ -8,7 +8,10 @@ class Plane : public Object {
     vec3 point, normal;
 
     Plane(vec3 point, vec3 normal, vec3 col, std::string type) : point{point}, normal{normal}, Object(col, type) {
-        if (type == "glass") kr = 0.4;
+        if (type == "mirror") kr = 1;
+        if (type == "glass") ior = 1.5;
+        if (type == "water") ior = 1.33;
+        if (type == "diamond") ior = 1.8;
         ka = 0.1;
         kd = 0.3;
         ks = 0.1;

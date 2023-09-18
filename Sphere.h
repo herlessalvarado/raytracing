@@ -10,6 +10,9 @@ class Sphere : public Object {
 
     Sphere(vec3 cen, float r, vec3 col, std::string type) : center{cen}, radius{r}, Object(col, type) {
         if (type == "glass") kr = 1;
+        if (type == "glass") ior = 1.5;
+        if (type == "water") ior = 1.33;
+        if (type == "diamond") ior = 1.8;
         ka = 0.1;
         kd = 0.8;
         ks = 0.9;

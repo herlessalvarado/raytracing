@@ -11,6 +11,9 @@ class Cylinder : public Object {
 
     Cylinder(vec3 top, vec3 bottom, float r, vec3 col, std::string type) : top{top}, bottom{bottom}, radius{r}, Object(col, type) {
         if (type == "glass") kr = 1;
+        if (type == "glass") ior = 1.5;
+        if (type == "water") ior = 1.33;
+        if (type == "diamond") ior = 1.8;
         ka = 0.05;
         kd = 0.15;
         ks = 0.95;
