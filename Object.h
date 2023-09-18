@@ -12,7 +12,13 @@ class Cylinder;
 class Object {
    public:
     vec3 color;
-    float ka, kd, ks, kr = 0, shininess;
+    // ka = ambient coefficient
+    // kd = diffuse coefficient
+    // ks = specular coefficient
+    // kr = reflective coefficient
+    // ior = index of refraction
+    // shininess = shininess
+    float ka, kd, ks, kr = 0, ior = 0, shininess;
     std::string type;
 
     Object(vec3 col, std::string type) : color{col}, type{type} {}
@@ -20,7 +26,11 @@ class Object {
     virtual bool intersect(Ray ray, float &t, vec3 &Pi, vec3 &N) = 0;
 
     bool isReflective() {
-        return type == "glass";
+        return type == "mirror";
+    };
+
+    bool isReflectiveAndRefractive() {
+        return type == "glass" || type == "water" || type == "diamond";
     };
 };
 
