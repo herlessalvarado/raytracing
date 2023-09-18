@@ -27,6 +27,8 @@ class Camera {
     void render(Light& light, vector<Object*> objects);
 
     vec3 lightning(Light& light, vector<Object*> objects, Ray ray, int depth);
+
+    vec3 refract(vec3& I, vec3& N, float& ior);
 };
 
 #endif  // CAMERA_H
