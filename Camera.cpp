@@ -105,9 +105,35 @@ vec3 Camera::lightning(Light& light, vector<Object*> objects, Ray ray, int depth
             vec3 reflected = 2 * V.dot(minN) * minN - V;
             reflected.normalize();
             Ray reflected_ray(minPi + 0.005 * minN, reflected);
-            reflective = lightning(light, objects, reflected_ray, depth + 1);
+            reflective = lightning(light, objects, reflected_ray, depth + 1) * closestObject->kr;
         }
-        color = closestObject->color * (ambient + diffuse + specular) + closestObject->kr * reflective;
+
+        // Refraction
+        vec3 reflectiveAndRefractive = vec3();
+        if (closestObject->isReflectiveAndRefractive() && depth < 7) {
+            // compute fresnel
+            vec3 refractive = vec3();
+            float kr;
+            fresnel(V, minN, closestObject->ior, kr);
+            bool outside = V.dot(minN) < 0;
+            vec3 bias = 0.005 * minN;
+            // compute refraction if it is not a case of total internal reflection
+            if (kr < 1) {
+                vec3 refracted = refract(V, minN, closestObject->ior);
+                refracted.normalize();
+                Ray refracted_ray(minPi - bias, refracted);
+                refractive = lightning(light, objects, refracted_ray, depth + 1);
+            }
+
+            vec3 reflected = 2 * V.dot(minN) * minN - V;
+            reflected.normalize();
+            Ray reflected_ray(minPi + bias, reflected);
+            vec3 reflectiveForRefractive = lightning(light, objects, reflected_ray, depth + 1);
+
+            reflectiveAndRefractive = reflectiveForRefractive * kr + refractive * (1 - kr);
+        }
+
+        color = closestObject->color * (ambient + diffuse + specular) + reflective + reflectiveAndRefractive;
         color.max_to_one();
     }
     return color;
@@ -148,4 +174,14 @@ void Camera::fresnel(vec3& I, vec3& N, float& ior, float& kr) {
     }
     // As a consequence of the conservation of energy, the transmittance is given by:
     // kt = 1 - kr;
+}
+
+float clamp(float menor, float mayor, float valor) {
+    if (valor < menor) {
+        return menor;
+    }
+    if (valor > mayor) {
+        return mayor;
+    }
+    return valor;
 }
