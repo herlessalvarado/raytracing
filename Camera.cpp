@@ -91,25 +91,10 @@ vec3 Camera::lightning(Light& light, vector<Object*> objects, Ray ray, int depth
 
         vec3 V = -ray.dir;
 
-        // No Shadow
-        if (!inShadow) {
-            float diff = L.dot(minN);
-            diffuse = light.color * closestObject->kd * max(0.0f, diff);
-            vec3 R = 2.0f * diff * minN - L;
-            specular = light.color * (closestObject->ks * (pow(max(0.0f, R.dot(V)), closestObject->shininess)));
-        }
-
-        // Reflection
         vec3 reflective = vec3();
-        if (closestObject->isReflective() && depth < 7) {
-            vec3 reflected = 2 * V.dot(minN) * minN - V;
-            reflected.normalize();
-            Ray reflected_ray(minPi + 0.005 * minN, reflected);
-            reflective = lightning(light, objects, reflected_ray, depth + 1) * closestObject->kr;
-        }
+        vec3 reflectiveAndRefractive = vec3();
 
         // Refraction
-        vec3 reflectiveAndRefractive = vec3();
         if (closestObject->isReflectiveAndRefractive() && depth < 7) {
             // compute fresnel
             vec3 refractive = vec3();
@@ -121,16 +106,32 @@ vec3 Camera::lightning(Light& light, vector<Object*> objects, Ray ray, int depth
             if (kr < 1) {
                 vec3 refracted = refract(V, minN, closestObject->ior);
                 refracted.normalize();
-                Ray refracted_ray(minPi - bias, refracted);
+                Ray refracted_ray(outside ? minPi + bias : minPi - bias, refracted);
                 refractive = lightning(light, objects, refracted_ray, depth + 1);
             }
 
             vec3 reflected = 2 * V.dot(minN) * minN - V;
             reflected.normalize();
-            Ray reflected_ray(minPi + bias, reflected);
+            Ray reflected_ray(outside ? minPi + bias : minPi - bias, reflected);
             vec3 reflectiveForRefractive = lightning(light, objects, reflected_ray, depth + 1);
 
             reflectiveAndRefractive = reflectiveForRefractive * kr + refractive * (1 - kr);
+        } else {
+            // No Shadow
+            if (!inShadow) {
+                float diff = L.dot(minN);
+                diffuse = light.color * closestObject->kd * max(0.0f, diff);
+                vec3 R = 2.0f * diff * minN - L;
+                specular = light.color * (closestObject->ks * (pow(max(0.0f, R.dot(V)), closestObject->shininess)));
+            }
+
+            // Reflection
+            if (closestObject->isReflective() && depth < 7) {
+                vec3 reflected = 2 * V.dot(minN) * minN - V;
+                reflected.normalize();
+                Ray reflected_ray(minPi + 0.005 * minN, reflected);
+                reflective = lightning(light, objects, reflected_ray, depth + 1) * closestObject->kr;
+            }
         }
 
         color = closestObject->color * (ambient + diffuse + specular) + reflective + reflectiveAndRefractive;
