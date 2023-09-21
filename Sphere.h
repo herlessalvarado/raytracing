@@ -9,7 +9,7 @@ class Sphere : public Object {
     float radius;
 
     Sphere(vec3 cen, float r, vec3 col, std::string type) : center{cen}, radius{r}, Object(col, type) {
-        if (type == "glass") kr = 1;
+        if (type == "mirror") kr = 1;
         if (type == "glass") ior = 1.5;
         if (type == "water") ior = 1.33;
         if (type == "diamond") ior = 1.8;
