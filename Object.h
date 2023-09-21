@@ -30,7 +30,7 @@ class Object {
     };
 
     bool isReflectiveAndRefractive() {
-        return type == "glass" || type == "water" || type == "diamond";
+        return ior != 0;
     };
 };
 
