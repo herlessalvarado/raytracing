@@ -20,7 +20,7 @@ void Camera::configure(float _near, float fov, int width, int height,
     ye = ze.cross(xe);
 }
 
-void Camera::render(Light& light, vector<Object*> objects, int x) {
+void Camera::render(vector<Light>& lights, vector<Object*> objects, int x) {
     Ray ray;
     ray.ori = eye;
     vec3 dir;
@@ -33,7 +33,7 @@ void Camera::render(Light& light, vector<Object*> objects, int x) {
             dir = ze * (-f) + ye * a * (y / h - 0.5) + xe * b * (x / w - 0.5);
             dir.normalize();
             ray.dir = dir;
-            vec3 color = lightning(light, objects, ray, 0);
+            vec3 color = lightning(lights, objects, ray, 0);
             (*pImg)(x, h - 1 - y, 0) = (BYTE)(color.x * 255);
             (*pImg)(x, h - 1 - y, 1) = (BYTE)(color.y * 255);
             (*pImg)(x, h - 1 - y, 2) = (BYTE)(color.z * 255);
@@ -50,14 +50,14 @@ void Camera::render(Light& light, vector<Object*> objects, int x) {
     pImg->save(nombre_archivo.c_str());
 }
 
-vec3 Camera::lightning(Light& light, vector<Object*> objects, Ray ray, int depth) {
+vec3 Camera::lightning(vector<Light>& lights, vector<Object*> objects, Ray ray, int depth) {
     float t;
     vec3 Pi, N, color;
-
     Object* closestObject = nullptr;
     float minT = std::numeric_limits<float>::infinity();
     vec3 minPi, minL, minN;
     bool hasIntersected = false;
+
     for (auto object : objects) {
         if (object->intersect(ray, t, Pi, N)) {
             if (t < minT && t > 0) {
@@ -70,36 +70,17 @@ vec3 Camera::lightning(Light& light, vector<Object*> objects, Ray ray, int depth
         }
     }
 
-    // if(hasIntersected && closestObject->light) {
+    // if (hasIntersected && closestObject->light) {
     //     return closestObject->color;
     // }
 
     if (hasIntersected) {
-        vec3 ambient = light.color * closestObject->ka;
-        vec3 diffuse = vec3(), specular = vec3();
-        vec3 L = light.pos - minPi;
-        float L_distance = L.modulus();
-        L.normalize();
-        minL = L;
-
-        // Shadow
-        Ray shadowRay;
-        shadowRay.ori = minPi + 0.005 * minN;
-        shadowRay.dir = minL;
-        bool inShadow = false;
-        for (auto object : objects) {
-            if (object->intersect(shadowRay, t, Pi, N)) {
-                if ((Pi - minPi).modulus() < L_distance) {
-                    inShadow = true;
-                    break;
-                }
-            }
-        }
-
-        vec3 V = -ray.dir;
-
+        vec3 ambient = vec3();
+        vec3 diffuse = vec3();
+        vec3 specular = vec3();
         vec3 reflective = vec3();
         vec3 reflectiveAndRefractive = vec3();
+        vec3 V = -ray.dir;
 
         // Refraction
         if (closestObject->isReflectiveAndRefractive() && depth < 7) {
@@ -114,30 +95,55 @@ vec3 Camera::lightning(Light& light, vector<Object*> objects, Ray ray, int depth
                 vec3 refracted = refract(ray.dir, minN, closestObject->ior);
                 refracted.normalize();
                 Ray refracted_ray(outside ? minPi - bias : minPi + bias, refracted);
-                refractive = lightning(light, objects, refracted_ray, depth + 1);
+                refractive = lightning(lights, objects, refracted_ray, depth + 1);
             }
 
             vec3 reflected = 2 * V.dot(minN) * minN - V;
             reflected.normalize();
             Ray reflected_ray(outside ? minPi + bias : minPi - bias, reflected);
-            vec3 reflectiveForRefractive = lightning(light, objects, reflected_ray, depth + 1);
+            vec3 reflectiveForRefractive = lightning(lights, objects, reflected_ray, depth + 1);
 
             reflectiveAndRefractive = reflectiveForRefractive * kr + refractive * (1 - kr);
-        } else {
-            // No Shadow
-            if (!inShadow) {
-                float diff = L.dot(minN);
-                diffuse = light.color * closestObject->kd * max(0.0f, diff);
-                vec3 R = 2.0f * diff * minN - L;
-                specular = light.color * (closestObject->ks * (pow(max(0.0f, R.dot(V)), closestObject->shininess)));
-            }
+        }
 
-            // Reflection
-            if (closestObject->isReflective() && depth < 7) {
-                vec3 reflected = 2 * V.dot(minN) * minN - V;
-                reflected.normalize();
-                Ray reflected_ray(minPi + 0.005 * minN, reflected);
-                reflective = lightning(light, objects, reflected_ray, depth + 1) * closestObject->kr;
+        // Reflection
+        else if (closestObject->isReflective() && depth < 7) {
+            vec3 reflected = 2 * V.dot(minN) * minN - V;
+            reflected.normalize();
+            Ray reflected_ray(minPi + 0.005 * minN, reflected);
+            reflective = lightning(lights, objects, reflected_ray, depth + 1) * closestObject->kr;
+        }
+
+        else {
+            for (auto& light : lights) {
+                vec3 L = light.pos - minPi;
+                float L_distance = L.modulus();
+                L.normalize();
+                minL = L;
+
+                // Shadow
+                Ray shadowRay;
+                shadowRay.ori = minPi + 0.005 * minN;
+                shadowRay.dir = minL;
+                bool inShadow = false;
+                for (auto object : objects) {
+                    if (object->intersect(shadowRay, t, Pi, N)) {
+                        if ((Pi - minPi).modulus() < L_distance) {
+                            inShadow = true;
+                            break;
+                        }
+                    }
+                }
+
+                // No Shadow
+                if (!inShadow) {
+                    ambient = ambient + (light.color * closestObject->ka);
+                    float diff = L.dot(minN);
+                    diffuse = diffuse + (light.color * closestObject->kd * max(0.0f, diff));
+                    vec3 R = 2.0f * diff * minN - L;
+                    R.normalize();
+                    specular = specular + (light.color * (closestObject->ks * (pow(max(0.0f, R.dot(V)), closestObject->shininess))));
+                }
             }
         }
 

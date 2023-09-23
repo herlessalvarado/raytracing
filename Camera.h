@@ -24,9 +24,9 @@ class Camera {
     void configure(float _near, float fov, int width, int height, vec3 pos_eye,
                    vec3 center, vec3 up);
 
-    void render(Light& light, vector<Object*> objects, int x);
+    void render(vector<Light>& lights, vector<Object*> objects, int x);
 
-    vec3 lightning(Light& light, vector<Object*> objects, Ray ray, int depth);
+    vec3 lightning(vector<Light>& lights, vector<Object*> objects, Ray ray, int depth);
 
     vec3 refract(vec3& I, vec3& N, float& ior);
 
