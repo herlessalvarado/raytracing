@@ -20,7 +20,7 @@ void Camera::configure(float _near, float fov, int width, int height,
     ye = ze.cross(xe);
 }
 
-void Camera::render(Light& light, vector<Object*> objects) {
+void Camera::render(Light& light, vector<Object*> objects, int x) {
     Ray ray;
     ray.ori = eye;
     vec3 dir;
@@ -39,13 +39,15 @@ void Camera::render(Light& light, vector<Object*> objects) {
             (*pImg)(x, h - 1 - y, 2) = (BYTE)(color.z * 255);
         }
     }
-    dis_img.render((*pImg));
-    dis_img.paint();
-    string nombre_archivo = "imagen" + to_string(1) + ".bmp";
+    // dis_img.render((*pImg));
+    // dis_img.paint();
+    // string nombre_archivo = "imagen" + to_string(1) + ".bmp";
+    // pImg->save(nombre_archivo.c_str());
+    // while (!dis_img.is_closed()) {
+    //     dis_img.wait();
+    // }
+    string nombre_archivo = "imagen" + to_string(x) + ".bmp";
     pImg->save(nombre_archivo.c_str());
-    while (!dis_img.is_closed()) {
-        dis_img.wait();
-    }
 }
 
 vec3 Camera::lightning(Light& light, vector<Object*> objects, Ray ray, int depth) {
@@ -67,6 +69,11 @@ vec3 Camera::lightning(Light& light, vector<Object*> objects, Ray ray, int depth
             }
         }
     }
+
+    // if(hasIntersected && closestObject->light) {
+    //     return closestObject->color;
+    // }
+
     if (hasIntersected) {
         vec3 ambient = light.color * closestObject->ka;
         vec3 diffuse = vec3(), specular = vec3();
@@ -99,14 +106,14 @@ vec3 Camera::lightning(Light& light, vector<Object*> objects, Ray ray, int depth
             // compute fresnel
             vec3 refractive = vec3();
             float kr;
-            fresnel(V, minN, closestObject->ior, kr);
-            bool outside = V.dot(minN) < 0;
+            fresnel(ray.dir, minN, closestObject->ior, kr);
+            bool outside = ray.dir.dot(minN) < 0;
             vec3 bias = 0.005 * minN;
             // compute refraction if it is not a case of total internal reflection
             if (kr < 1) {
-                vec3 refracted = refract(V, minN, closestObject->ior);
+                vec3 refracted = refract(ray.dir, minN, closestObject->ior);
                 refracted.normalize();
-                Ray refracted_ray(outside ? minPi + bias : minPi - bias, refracted);
+                Ray refracted_ray(outside ? minPi - bias : minPi + bias, refracted);
                 refractive = lightning(light, objects, refracted_ray, depth + 1);
             }
 
