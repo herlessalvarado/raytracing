@@ -8,13 +8,15 @@
 class World {
    public:
     Camera camera;
-    Light light;
+    std::vector<Light> lights;
     std::vector<Object*> objects;
 
-    World(const Camera& camera, const Light& light)
-        : camera(camera), light(light){};
+    World(const Camera& camera)
+        : camera(camera){};
 
     void addObject(Object* object) { objects.push_back(object); }
+
+    void addLight(Light light) { lights.push_back(light); }
 };
 
 #endif  // WORLD_H
