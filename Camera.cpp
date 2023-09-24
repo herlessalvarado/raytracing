@@ -137,12 +137,12 @@ vec3 Camera::lightning(vector<Light>& lights, vector<Object*> objects, Ray ray, 
 
                 // No Shadow
                 if (!inShadow) {
-                    ambient = ambient + (light.color * closestObject->ka);
+                    ambient = ambient + (light.color * closestObject->ka) * light.intensity;
                     float diff = L.dot(minN);
-                    diffuse = diffuse + (light.color * closestObject->kd * max(0.0f, diff));
+                    diffuse = diffuse + (light.color * closestObject->kd * max(0.0f, diff)) * light.intensity;
                     vec3 R = 2.0f * diff * minN - L;
                     R.normalize();
-                    specular = specular + (light.color * (closestObject->ks * (pow(max(0.0f, R.dot(V)), closestObject->shininess))));
+                    specular = specular + (light.color * (closestObject->ks * (pow(max(0.0f, R.dot(V)), closestObject->shininess)))) * light.intensity;
                 }
             }
         }
