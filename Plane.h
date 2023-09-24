@@ -7,7 +7,7 @@ class Plane : public Object {
    public:
     vec3 point, normal;
 
-    Plane(vec3 point, vec3 normal, vec3 col, std::string type) : point{point}, normal{normal}, Object(col, type) {
+    Plane(vec3 point, vec3 normal, vec3 col, std::string type, bool isLight = false) : point{point}, normal{normal}, Object(col, type, isLight) {
         if (type == "mirror") kr = 1;
         if (type == "glass") ior = 1.5;
         if (type == "water") ior = 1.33;

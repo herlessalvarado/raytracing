@@ -19,9 +19,10 @@ class Object {
     // ior = index of refraction
     // shininess = shininess
     float ka, kd, ks, kr = 0, ior = 0, shininess;
+    bool isLight;
     std::string type;
 
-    Object(vec3 col, std::string type) : color{col}, type{type} {}
+    Object(vec3 col, std::string type, bool isLight) : color{col}, type{type}, isLight{isLight} {}
 
     virtual bool intersect(Ray ray, float &t, vec3 &Pi, vec3 &N) = 0;
 

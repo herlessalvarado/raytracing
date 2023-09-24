@@ -9,7 +9,7 @@ class Cylinder : public Object {
     vec3 top, bottom;
     float radius;
 
-    Cylinder(vec3 top, vec3 bottom, float r, vec3 col, std::string type) : top{top}, bottom{bottom}, radius{r}, Object(col, type) {
+    Cylinder(vec3 top, vec3 bottom, float r, vec3 col, std::string type, bool isLight = false) : top{top}, bottom{bottom}, radius{r}, Object(col, type, isLight) {
         if (type == "mirror") kr = 1;
         if (type == "glass") ior = 1.5;
         if (type == "air") ior = 1;

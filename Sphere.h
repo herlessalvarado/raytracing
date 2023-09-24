@@ -8,7 +8,7 @@ class Sphere : public Object {
     vec3 center;
     float radius;
 
-    Sphere(vec3 cen, float r, vec3 col, std::string type) : center{cen}, radius{r}, Object(col, type) {
+    Sphere(vec3 cen, float r, vec3 col, std::string type, bool isLight = false) : center{cen}, radius{r}, Object(col, type, isLight) {
         if (type == "mirror") kr = 1;
         if (type == "glass") ior = 1.5;
         if (type == "water") ior = 1.33;
