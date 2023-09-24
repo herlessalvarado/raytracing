@@ -70,9 +70,9 @@ vec3 Camera::lightning(vector<Light>& lights, vector<Object*> objects, Ray ray, 
         }
     }
 
-    // if (hasIntersected && closestObject->light) {
-    //     return closestObject->color;
-    // }
+    if (hasIntersected && closestObject->isLight) {
+        return closestObject->color;
+    }
 
     if (hasIntersected) {
         vec3 ambient = vec3();
