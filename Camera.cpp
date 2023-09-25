@@ -46,7 +46,7 @@ void Camera::render(vector<Light>& lights, vector<Object*> objects, int x) {
     // while (!dis_img.is_closed()) {
     //     dis_img.wait();
     // }
-    string nombre_archivo = "imagen" + to_string(x) + ".bmp";
+    string nombre_archivo = "bmp/imagen" + to_string(x) + ".bmp";
     pImg->save(nombre_archivo.c_str());
 }
 
