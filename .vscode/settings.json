@@ -70,6 +70,16 @@
     "iterator": "cpp",
     "memory_resource": "cpp",
     "random": "cpp",
-    "utility": "cpp"
+    "utility": "cpp",
+    "queue": "cpp",
+    "span": "cpp",
+    "stack": "cpp",
+    "charconv": "cpp",
+    "complex": "cpp",
+    "iomanip": "cpp",
+    "numbers": "cpp",
+    "numeric": "cpp",
+    "format": "cpp",
+    "cinttypes": "cpp"
   }
 }
