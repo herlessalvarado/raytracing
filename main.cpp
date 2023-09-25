@@ -49,11 +49,11 @@ void setupSphereLights(World &world) {
 int main() {
     Camera camera;
     World world(camera);
+    setupObjects(world);
+    setupSphereLights(world);
     for (int i = 0; i < 20; i++) {
-        world.camera.configure(3, 60, 800, 600, vec3(i * 20, i * 20, 100), vec3(0, 0, 0),
+        world.camera.configure(3, 60, 800, 600, vec3(i * 10, i * 10, 100), vec3(0, 0, 0),
                                vec3(0, 1, 0));
-        setupObjects(world);
-        setupSphereLights(world);
         world.camera.render(world.lights, world.objects, i);
     }
 
