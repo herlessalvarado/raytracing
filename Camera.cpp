@@ -127,7 +127,7 @@ vec3 Camera::lightning(vector<Light>& lights, vector<Object*> objects, Ray ray, 
                 shadowRay.dir = minL;
                 bool inShadow = false;
                 for (auto object : objects) {
-                    if (object->intersect(shadowRay, t, Pi, N)) {
+                    if (!object->isLight && object->intersect(shadowRay, t, Pi, N)) {
                         if ((Pi - minPi).modulus() < L_distance) {
                             inShadow = true;
                             break;
